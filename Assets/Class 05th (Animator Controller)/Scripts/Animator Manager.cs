@@ -3,27 +3,67 @@ using UnityEngine;
 public class AnimatorManager : MonoBehaviour
 {
     public Animator animator;
+    public AnimatorStateInfo animatorStateInfo;
 
     public void Die()
     {
-        animator.SetTrigger("Die");
+        animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        if (!animatorStateInfo.IsName("Die") && !animator.IsInTransition(0))
+        {
+            animator.SetTrigger("Die");
+        }
+        else
+        {
+            return;
+        }
     }
 
     public void Attack()
     {
+        animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        if (animatorStateInfo.IsName("Walk"))
+        {
+            animator.SetBool("Walk", false);
+        }
+        else if (animatorStateInfo.IsName("Idle"))
+        {
+            animator.SetBool("Idle", false);
+        }
+
         animator.SetBool("Attack", true);
-        animator.SetBool("Walk", false);
     }
 
     public void Walk()
     {
+        animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        if(animatorStateInfo.IsName("Attack"))
+        {
+            animator.SetBool("Attack", false);
+        }
+        else if(animatorStateInfo.IsName("Idle"))
+        {
+            animator.SetBool("Idle", false);
+        }
+
         animator.SetBool("Walk",true);
-        animator.SetBool("Attack", false);
     }
 
     public void Idle()
     {
-        animator.SetBool("Walk", false);
-        animator.SetBool("Attack", false);
+        animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        if (animatorStateInfo.IsName("Attack"))
+        {
+            animator.SetBool("Attack", false);
+        }
+        else if (animatorStateInfo.IsName("Walk"))
+        {
+            animator.SetBool("Walk", false);
+        }
+
+        animator.SetBool("Idle", true);
     }
 }
