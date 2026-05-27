@@ -3,7 +3,8 @@ using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class Character : MonoBehaviour
 {
-    public Vector3 direction;
+    [SerializeField] Vector3 direction;
+    [SerializeField] float speed;
 
     void Start()
     {
@@ -13,8 +14,13 @@ public class Character : MonoBehaviour
 
     void Update()
     {
-        direction = new Vector3(Input.GetAxis("Horizontal"),0, Input.GetAxis("Vertical"));
+        direction = new Vector3(Input.GetAxisRaw("Horizontal"),0, Input.GetAxisRaw("Vertical"));
 
-        transform.position += direction;
+        //Time.deltaTime
+        //이전 프레임에서 현재 프레임까지 걸린 시간입니다.
+
+        direction.Normalize();
+
+        transform.position += direction * Time.deltaTime * speed;
     }
 }
