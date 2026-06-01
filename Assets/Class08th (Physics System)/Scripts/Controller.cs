@@ -4,7 +4,8 @@ public class Controller : MonoBehaviour
 {
     [SerializeField] Rigidbody rigidbody;
     Vector3 direction;
-    [SerializeField] float speed;
+    [SerializeField] float force;
+    [SerializeField] ForceMode forceMode;
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
@@ -14,7 +15,8 @@ public class Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        direction.x = Input.GetAxis("Horizontal");
+        direction.z = Input.GetAxis("Vertical");
 
         direction.Normalize();
     }
@@ -37,7 +39,48 @@ public class Controller : MonoBehaviour
         //ForceMode.VelocityChange(순간적인 속도 변화)
         //무게(m)과 시간(t)을 모두 무시하며, 입력한 벡터 값 자체가 객체의 다음
         //프레임 속도 변화량이 되는 것입니다.
+        
+        if(forceMode == ForceMode.Impulse)
+        {
+            rigidbody.AddForce(Vector3.up * force, forceMode);
 
-        rigidbody.AddForce(direction * speed,ForceMode.Force);
+            forceMode = ForceMode.Force;
+            return;
+        }
+
+        rigidbody.AddForce(direction * force, forceMode);
+
+    }
+
+    public void Soar()
+    {
+        //rigidbody.AddForce(soar, ForceMode.Impulse);
+        
+
+        forceMode = ForceMode.Impulse;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Barrier"))
+        {
+            Debug.Log("OnCollisionEnter");
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Barrier"))
+        {
+            Debug.Log("OnCollisionStay");
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Barrier"))
+        {
+            Debug.Log("OnCollisionExit");
+        }
     }
 }

@@ -3,9 +3,18 @@ using UnityEngine;
 
 public class Sensor : MonoBehaviour
 {
+    [SerializeField] Controller controller;
+
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.transform.gameObject.name);
+        //Debug.Log(other.transform.gameObject.name);
+
+        controller = other.GetComponent<Controller>();
+
+        if(controller != null )
+        {
+            controller.Soar();
+        }
     }
 
     private void OnTriggerStay(Collider other)
@@ -15,6 +24,6 @@ public class Sensor : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        //Debug.Log("OnTriggerExit");
+        
     }
 }
